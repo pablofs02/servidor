@@ -1,75 +1,14 @@
-use servidor::ThreadPool;
-use std::{
-    fs,
-    io::{prelude::*, BufReader},
-    net::{TcpListener, TcpStream},
-    thread,
-    time::Duration,
-};
+use servidor::*;
+use std::net::TcpListener;
 
 fn main() {
-    let listener = TcpListener::bind("192.168.0.16:9999").unwrap();
-    let pool = ThreadPool::new(4);
+    let puerto = TcpListener::bind("127.0.0.1:9999").unwrap();
+    let piscina = Piscina::new(2);
 
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        pool.execute(|| {
-            handle_connection(stream);
+    for conexion in puerto.incoming() {
+        let conexion = conexion.unwrap();
+        piscina.execute(|| {
+            tratar_conexion(conexion);
         });
-    }
-}
-
-fn handle_connection(mut stream: TcpStream) {
-    let buf_reader = BufReader::new(&mut stream);
-    let request_line = buf_reader.lines().next().unwrap().unwrap();
-    println!("{}", request_line);
-    let (status_line, filename) = match &request_line[..] {
-        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", "index.html"),
-        "GET /estilo.css HTTP/1.1" => ("HTTP/1.1 200 OK", "estilo.css"),
-        "GET /espana.svg HTTP/1.1" => ("HTTP/1.1 200 OK", "espana.svg"),
-        "GET /img.png HTTP/1.1" => ("HTTP/1.1 200 OK", "img.png"),
-        "GET /img.jpg HTTP/1.1" => ("HTTP/1.1 200 OK", "img.jpg"),
-        "GET /video.mp4 HTTP/1.1" => ("HTTP/1.1 200 OK", "video.mp4"),
-        "GET /func.js HTTP/1.1" => ("HTTP/1.1 200 OK", "func.js"),
-        "GET /sleep HTTP/1.1" => {
-            thread::sleep(Duration::from_secs(5));
-            ("HTTP/1.1 200 OK", "hello.html")
-        }
-        _ => ("HTTP/1.1 404 NOT FOUND", "404.html"),
-    };
-
-    if filename == "img.png" {
-        let contents = fs::read(filename).unwrap();
-        let length = contents.len();
-        let response = format!("{status_line}\r\nContent-Type: image/png\r\nContent-Length: {length}\r\n\r\n");
-        stream.write_all(response.as_bytes()).unwrap();
-        stream.write_all(&contents).unwrap();
-        stream.flush().unwrap();
-    } else if filename == "img.jpg" {
-        let contents = fs::read(filename).unwrap();
-        let length = contents.len();
-        let response = format!("{status_line}\r\nContent-Type: image/jpg\r\nContent-Length: {length}\r\n\r\n");
-        stream.write_all(response.as_bytes()).unwrap();
-        stream.write_all(&contents).unwrap();
-        stream.flush().unwrap();
-    } else if filename == "espana.svg" {
-        let contents = fs::read_to_string(filename).unwrap();
-        println!("{contents}");
-        let length = contents.len();
-        let response = format!("{status_line}\r\nContent-Type: image/svg+xml; charset=utf-8\r\nContent-Length: {length}\r\n\r\n{contents}");
-        stream.write_all(response.as_bytes()).unwrap();
-    } else if filename == "video.mp4" {
-        let contents = fs::read(filename).unwrap();
-        let length = contents.len();
-        let response = format!("{status_line}\r\nContent-Type: video/mp4\r\nContent-Length: {length}\r\n\r\n");
-        stream.write_all(response.as_bytes()).unwrap();
-        stream.write_all(&contents).unwrap();
-        stream.flush().unwrap();
-    } else {
-        let contents = fs::read_to_string(filename).unwrap();
-        println!("{contents}");
-        let length = contents.len();
-        let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
-        stream.write_all(response.as_bytes()).unwrap();
     }
 }
