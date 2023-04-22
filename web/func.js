@@ -1,4 +1,4 @@
-const x = document.getElementById("baseñ");
+const x = document.getElementById("base");
 x.addEventListener("click", () => {
     alert("¡FUNCINA!");
 });

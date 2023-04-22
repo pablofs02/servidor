@@ -3,9 +3,9 @@ name = "servidor"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+if-addrs = "0.10.1"
+webbrowser = "0.8.9"
 
 [profile.release]
 opt-level = 'z'

@@ -1,6 +1,12 @@
 use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 
+#[derive(Debug, Copy, Clone)]
+pub struct Opciones {
+    pub verboso: bool,
+    pub local: bool
+}
+
 type Orden = Box<dyn FnOnce() + Send + 'static>;
 
 struct Nadador {
@@ -8,7 +14,7 @@ struct Nadador {
 }
 
 impl Nadador {
-    fn new(instructor: Arc<Mutex<mpsc::Receiver<Orden>>>) -> Nadador {
+    fn new(instructor: Arc<Mutex<mpsc::Receiver<Orden>>>) -> Self {
         let movimiento = thread::spawn(move || loop {
             let mensaje = instructor.lock().unwrap().recv();
             match mensaje {
@@ -20,7 +26,7 @@ impl Nadador {
                 }
             }
         });
-        Nadador { movimiento: Some(movimiento) }
+        Self { movimiento: Some(movimiento) }
     }
 }
 
@@ -30,17 +36,20 @@ pub struct Piscina {
 }
 
 impl Piscina {
-    pub fn new(capacidad: usize) -> Piscina {
-        assert!(capacidad > 0);
+    #[must_use]
+    pub fn new(capacidad: usize) -> Self {
         let (sender, receiver) = mpsc::channel();
         let receiver = Arc::new(Mutex::new(receiver));
         let mut nadadores = Vec::with_capacity(capacidad);
         for _ in 0..capacidad {
             nadadores.push(Nadador::new(Arc::clone(&receiver)));
         }
-        Piscina { nadadores, instructor: Some(sender) }
+        Self { nadadores, instructor: Some(sender) }
     }
 
+    /// # Panics
+    ///
+    /// Ni idea tt
     pub fn execute<F>(&self, f: F)
     where F: FnOnce() + Send + 'static {
         let orden = Box::new(f);
@@ -53,7 +62,7 @@ impl Drop for Piscina {
         drop(self.instructor.take());
         for nadador in &mut self.nadadores {
             if let Some(movimiento) = nadador.movimiento.take() {
-                movimiento.join().unwrap();
+                movimiento.join().expect("Mal movimiento");
             }
         }
     }
