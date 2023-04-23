@@ -3,8 +3,10 @@ use std::thread;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Opciones {
-    pub verboso: bool,
-    pub local: bool
+    pub ayuda: bool,
+    pub local: bool,
+    pub navegador: bool,
+    pub verboso: bool
 }
 
 type Orden = Box<dyn FnOnce() + Send + 'static>;

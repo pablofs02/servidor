@@ -15,7 +15,9 @@ pub fn abrir_servidor_http(opciones: Opciones) {
         dir = dir_privada() + ":" + num_puerto;
     }
     puerto = TcpListener::bind(&dir).expect("No se pudo iniciar el puerto");
-    abrir_en_navegador(&dir);
+    if opciones.navegador || opciones.local {
+        abrir_en_navegador(&dir);
+    }
     let piscina = Piscina::new(16);
     for conexion in puerto.incoming() {
         let conexion = conexion.expect("Conexión incorrecta");

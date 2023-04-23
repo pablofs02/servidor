@@ -1,5 +1,4 @@
-¿Iniciar en navegador?
 - Permitir argumentos de tipo: 'c=valor' o 'c valor'
-- Cambiar directorio base
-- No permitir acceder a archivos detrás de la base
+- Opción de cambiar directorio base
+- Opción de cambiar el puerto
 - Arreglar nosequé de las rutas relativas
