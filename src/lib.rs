@@ -51,18 +51,35 @@ fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
 }
 
 fn solicitud_get(conexion: TcpStream, mut archivo: String, estatus: &str) {
+    let mut error301 = false;
     if archivo.is_empty() {
         archivo.push('.');
     }
     fs::metadata(&archivo).ok().map_or((), |metadata| {
         if metadata.is_dir() {
-            archivo.push_str("/index.html");
+            if archivo == "." || archivo.ends_with("/") {
+                archivo.push_str("/index.html");
+            } else {
+                archivo.push('/');
+                error301 = true;
+            }
         }
     });
-    match fs::read(&archivo) {
-        Ok(contenido) => dar_respuesta(conexion, estatus, &archivo, &contenido),
-        Err(_) => error_404(conexion)
+    if error301 {
+        error_301(conexion, &archivo);
+    } else {
+        match fs::read(&archivo) {
+            Ok(contenido) => dar_respuesta(conexion, estatus, &archivo, &contenido),
+            Err(_) => error_404(conexion)
+        }
     }
+}
+
+fn error_301(mut conexion: TcpStream, archivo: &str) {
+    let ruta: &str = &archivo[..];
+    let respuesta = format!("HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n");
+    conexion.write_all(respuesta.as_bytes()).unwrap();
+    conexion.flush().unwrap();
 }
 
 fn error_404(conexion: TcpStream) {
