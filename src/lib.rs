@@ -6,16 +6,14 @@ use std::io::BufReader;
 use std::net::{TcpListener, TcpStream};
 
 pub fn abrir_servidor_http(opciones: Opciones) {
-    let puerto: TcpListener;
-    let dir: String;
     let num_puerto = "9999";
-    if opciones.local {
-        dir = "127.0.0.1".to_owned() + ":" + num_puerto;
+    let dir: String = if opciones.local {
+        "127.0.0.1".to_owned() + ":" + num_puerto
     } else {
-        dir = dir_privada() + ":" + num_puerto;
-    }
-    puerto = TcpListener::bind(&dir).expect("No se pudo iniciar el puerto");
-    if opciones.navegador || opciones.local {
+        dir_privada() + ":" + num_puerto
+    };
+    let puerto: TcpListener = TcpListener::bind(&dir).expect("No se pudo iniciar el puerto");
+    if opciones.local {
         abrir_en_navegador(&dir);
     }
     let piscina = Piscina::new(16);
@@ -27,8 +25,8 @@ pub fn abrir_servidor_http(opciones: Opciones) {
     }
 }
 
-fn abrir_en_navegador(dir: &String) {
-    let url = "http://".to_owned() + &dir[..];
+fn abrir_en_navegador(dir: &str) {
+    let url = "http://".to_owned() + dir;
     webbrowser::open(&url[..]).unwrap();
 }
 
@@ -36,10 +34,7 @@ fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
     let lector = BufReader::new(&mut conexion);
     if let Some(Ok(solicitud)) = lector.lines().next() {
         if opciones.verboso {
-            match conexion.peer_addr() {
-                Ok(dir) => println!("[{}] {solicitud}", dir.ip()),
-                Err(_) => println!("{solicitud}")
-            }
+            conexion.peer_addr().map_or_else(|_| println!("{solicitud}"), |dir| println!("[{}] {solicitud}", dir.ip()));
         }
         let (tipo, archivo, mut estatus) = desmontar_solicitud(&solicitud);
         estatus.push_str(" 200 OK");
@@ -57,7 +52,7 @@ fn solicitud_get(conexion: TcpStream, mut archivo: String, estatus: &str) {
     }
     fs::metadata(&archivo).ok().map_or((), |metadata| {
         if metadata.is_dir() {
-            if archivo == "." || archivo.ends_with("/") {
+            if archivo == "." || archivo.ends_with('/') {
                 archivo.push_str("/index.html");
             } else {
                 archivo.push('/');
@@ -75,8 +70,7 @@ fn solicitud_get(conexion: TcpStream, mut archivo: String, estatus: &str) {
     }
 }
 
-fn error_301(mut conexion: TcpStream, archivo: &str) {
-    let ruta: &str = &archivo[..];
+fn error_301(mut conexion: TcpStream, ruta: &str) {
     let respuesta = format!("HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n");
     conexion.write_all(respuesta.as_bytes()).unwrap();
     conexion.flush().unwrap();

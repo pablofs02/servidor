@@ -8,7 +8,6 @@ fn main() {
     let mut opciones = Opciones {
         ayuda: false,
         local: true,
-        navegador: false,
         verboso: false
     };
     opciones = tratar_argumentos(opciones);
@@ -27,8 +26,8 @@ fn tratar_argumentos(mut opciones: Opciones) -> Opciones {
             continue;
         }
         // Formato UNIX '-v' o BSD 'v'
-        if argumento.chars().next().unwrap() == '-' {
-            opciones = tratar_caracteres(&argumento[1..], opciones);
+        if let Some(argumento) = argumento.strip_prefix('-') {
+            opciones = tratar_caracteres(argumento, opciones);
         } else {
             opciones = tratar_caracteres(argumento, opciones);
         }
@@ -41,7 +40,6 @@ fn tratar_caracteres(caracteres: &str, mut opciones: Opciones) -> Opciones {
         match letra {
             '?' => opciones.ayuda = true,
             'l' => opciones.local = true,
-            'n' => opciones.navegador = true,
             'p' => opciones.local = false,
             'v' => opciones.verboso = true,
             _ => {
@@ -59,7 +57,6 @@ fn mensaje_de_ayuda() {
         "Modo de empleo: servidor [OPCIONES...]
     ?    mostrar opciones
     l    servidor local (por defecto)
-    n    abrir en navegador
     p    servidor público
     v    más información"
     );

@@ -1,3 +1,4 @@
 - Permitir argumentos de tipo: 'c=valor' o 'c valor'
 - Opción de cambiar directorio base
 - Opción de cambiar el puerto
+- Mirar si una petición externa da mal resultado ../

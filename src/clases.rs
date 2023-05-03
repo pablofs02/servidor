@@ -5,7 +5,6 @@ use std::thread;
 pub struct Opciones {
     pub ayuda: bool,
     pub local: bool,
-    pub navegador: bool,
     pub verboso: bool
 }
 
