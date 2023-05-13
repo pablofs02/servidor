@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 if-addrs = "0.10.1"
 webbrowser = "0.8.9"
+urlencoding = "2.1.2"
 
 [profile.release]
 opt-level = 'z'

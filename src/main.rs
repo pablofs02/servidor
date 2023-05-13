@@ -2,9 +2,15 @@ extern crate if_addrs;
 extern crate webbrowser;
 use servidor::{abrir_servidor_http, Opciones};
 use std::env::args;
+use std::fs::OpenOptions;
+use std::io::Write;
 use std::process::exit;
 
-fn main() {
+fn main() -> std::io::Result<()> {
+    let mut archivo = OpenOptions::new().write(true).append(true).open("serv.log").unwrap();
+    if let Err(e) = writeln!(archivo, "A new line!") {
+        eprintln!("Couldn't write to file: {}", e);
+    }
     let mut opciones = Opciones {
         ayuda: false,
         local: true,
@@ -16,6 +22,8 @@ fn main() {
     } else {
         abrir_servidor_http(opciones);
     }
+
+    Ok(())
 }
 
 fn tratar_argumentos(mut opciones: Opciones) -> Opciones {
@@ -38,7 +46,7 @@ fn tratar_argumentos(mut opciones: Opciones) -> Opciones {
 fn tratar_caracteres(caracteres: &str, mut opciones: Opciones) -> Opciones {
     for letra in caracteres.chars() {
         match letra {
-            '?' => opciones.ayuda = true,
+            'o' => opciones.ayuda = true,
             'l' => opciones.local = true,
             'p' => opciones.local = false,
             'v' => opciones.verboso = true,
@@ -55,7 +63,7 @@ fn tratar_caracteres(caracteres: &str, mut opciones: Opciones) -> Opciones {
 fn mensaje_de_ayuda() {
     println!(
         "Modo de empleo: servidor [OPCIONES...]
-    ?    mostrar opciones
+    o    mostrar opciones
     l    servidor local (por defecto)
     p    servidor público
     v    más información"

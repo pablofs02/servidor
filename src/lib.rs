@@ -1,9 +1,10 @@
-mod clases;
-pub use clases::*;
+mod hebras;
+pub use hebras::*;
 use std::fs;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::net::{TcpListener, TcpStream};
+use urlencoding::decode;
 
 pub fn abrir_servidor_http(opciones: Opciones) {
     let num_puerto = "9999";
@@ -33,13 +34,14 @@ fn abrir_en_navegador(dir: &str) {
 fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
     let lector = BufReader::new(&mut conexion);
     if let Some(Ok(solicitud)) = lector.lines().next() {
-        if opciones.verboso {
-            conexion.peer_addr().map_or_else(|_| println!("{solicitud}"), |dir| println!("[{}] {solicitud}", dir.ip()));
-        }
         let (tipo, archivo, mut estatus) = desmontar_solicitud(&solicitud);
+        let archivo = decode(&archivo).expect("UTF-8");
+        if opciones.verboso {
+            conexion.peer_addr().map_or_else(|_| println!("{tipo} {archivo} {estatus}"), |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip()));
+        }
         estatus.push_str(" 200 OK");
         match &tipo[..] {
-            "GET" => solicitud_get(conexion, archivo, &estatus),
+            "GET" => solicitud_get(conexion, (&archivo).to_string(), &estatus),
             _ => solicitud_desconocida(conexion)
         }
     }
@@ -65,7 +67,7 @@ fn solicitud_get(conexion: TcpStream, mut archivo: String, estatus: &str) {
     } else {
         match fs::read(&archivo) {
             Ok(contenido) => dar_respuesta(conexion, estatus, &archivo, &contenido),
-            Err(_) => error_404(conexion)
+            Err(_) => error_404(conexion, &archivo)
         }
     }
 }
@@ -76,7 +78,8 @@ fn error_301(mut conexion: TcpStream, ruta: &str) {
     conexion.flush().unwrap();
 }
 
-fn error_404(conexion: TcpStream) {
+fn error_404(conexion: TcpStream, archivo: &str) {
+    conexion.peer_addr().map_or_else(|_| println!("\x1b[31m{archivo}\x1b[0m"), |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip()));
     let archivo = String::from("404.html");
     let estatus = "HTTP/1.1 404 Not Found".to_string();
     match fs::read(&archivo) {
