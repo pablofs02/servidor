@@ -7,7 +7,7 @@ use std::io::Write;
 use std::process::exit;
 
 fn main() -> std::io::Result<()> {
-    let mut archivo = OpenOptions::new().write(true).append(true).open("serv.log").unwrap();
+    let mut archivo = OpenOptions::new().write(true).append(true).open("registro.pfs").unwrap();
     if let Err(e) = writeln!(archivo, "A new line!") {
         eprintln!("Couldn't write to file: {}", e);
     }

@@ -1,8 +1,47 @@
-¡A new line!
-e!
+GET  HTTP/1.1
+GET web/ HTTP/1.1
+GET web/estilo.css HTTP/1.1
+GET web/func.js HTTP/1.1
+GET web/img.jpg HTTP/1.1
+GET web/video.mp4 HTTP/1.1
 A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
 A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
 A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
 A new line!
--> A new line!
-<- A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+A new line!
+GET / HTTP/1.1
+A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+GET /web/ HTTP/1.1
+A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+GET /web/ HTTP/1.1
+GET / HTTP/1.1
+A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+A new line!
+GET / HTTP/1.1
+GET /favicon.ico HTTP/1.1
+GET /web/ HTTP/1.1
+GET /web/estilo.css HTTP/1.1
+GET /web/func.js HTTP/1.1
+GET /web/img.jpg HTTP/1.1
+GET /web/video.mp4 HTTP/1.1
+GET /web/españa.svg HTTP/1.1

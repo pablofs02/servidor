@@ -1,6 +1,7 @@
 mod hebras;
 pub use hebras::*;
 use std::fs;
+use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::net::{TcpListener, TcpStream};
@@ -39,6 +40,11 @@ fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
         if opciones.verboso {
             conexion.peer_addr().map_or_else(|_| println!("{tipo} {archivo} {estatus}"), |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip()));
         }
+        let mut registro = OpenOptions::new().write(true).append(true).open("registro.pfs").unwrap();
+        if let Err(e) = writeln!(registro, "{tipo} {archivo} {estatus}") {
+            eprintln!("Error al registrar: {}", e);
+        }
+
         estatus.push_str(" 200 OK");
         match &tipo[..] {
             "GET" => solicitud_get(conexion, (&archivo).to_string(), &estatus),
@@ -49,23 +55,24 @@ fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
 
 fn solicitud_get(conexion: TcpStream, mut archivo: String, estatus: &str) {
     let mut error301 = false;
-    if archivo.is_empty() {
-        archivo.push('.');
-    }
-    fs::metadata(&archivo).ok().map_or((), |metadata| {
-        if metadata.is_dir() {
-            if archivo == "." || archivo.ends_with('/') {
-                archivo.push_str("/index.html");
-            } else {
-                archivo.push('/');
-                error301 = true;
+    if archivo == "/" {
+        archivo.push_str("index.html");
+    } else {
+        fs::metadata(&archivo[1..]).ok().map_or((), |metadata| {
+            if metadata.is_dir() {
+                if archivo.ends_with('/') {
+                    archivo.push_str("/index.html");
+                } else {
+                    archivo.push('/');
+                    error301 = true;
+                }
             }
-        }
-    });
+        });
+    }
     if error301 {
         error_301(conexion, &archivo);
     } else {
-        match fs::read(&archivo) {
+        match fs::read(&archivo[1..]) {
             Ok(contenido) => dar_respuesta(conexion, estatus, &archivo, &contenido),
             Err(_) => error_404(conexion, &archivo)
         }
@@ -120,8 +127,6 @@ fn desmontar_solicitud(solicitud: &str) -> (String, String, String) {
                 tipo.push(c);
             }
         } else if estado == 1 {
-            estado += 1;
-        } else if estado == 2 {
             if c == ' ' {
                 estado += 1;
             } else {

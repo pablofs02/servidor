@@ -48,9 +48,6 @@ impl Piscina {
         Self { nadadores, instructor: Some(sender) }
     }
 
-    /// # Panics
-    ///
-    /// Ni idea tt
     pub fn execute<F>(&self, f: F)
     where F: FnOnce() + Send + 'static {
         let orden = Box::new(f);
