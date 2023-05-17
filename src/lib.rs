@@ -1,5 +1,7 @@
 mod hebras;
+mod opciones;
 pub use hebras::*;
+pub use opciones::*;
 use std::fs;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
@@ -21,7 +23,7 @@ pub fn abrir_servidor_http(opciones: Opciones) {
     let piscina = Piscina::new(16);
     for conexion in puerto.incoming() {
         let conexion = conexion.expect("Conexión incorrecta");
-        piscina.execute(move || {
+        piscina.arrancar(move || {
             tratar_conexion(conexion, opciones);
         });
     }
@@ -40,14 +42,14 @@ fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
         if opciones.verboso {
             conexion.peer_addr().map_or_else(|_| println!("{tipo} {archivo} {estatus}"), |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip()));
         }
+        let ip = conexion.peer_addr().unwrap().ip();
         let mut registro = OpenOptions::new().write(true).append(true).open("registro.pfs").unwrap();
-        if let Err(e) = writeln!(registro, "{tipo} {archivo} {estatus}") {
-            eprintln!("Error al registrar: {}", e);
+        if let Err(e) = writeln!(registro, "[{ip}] {tipo} {archivo} {estatus}") {
+            eprintln!("Error al registrar: {e}");
         }
-
         estatus.push_str(" 200 OK");
         match &tipo[..] {
-            "GET" => solicitud_get(conexion, (&archivo).to_string(), &estatus),
+            "GET" => solicitud_get(conexion, archivo.to_string(), &estatus),
             _ => solicitud_desconocida(conexion)
         }
     }

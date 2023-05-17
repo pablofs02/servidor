@@ -6,10 +6,10 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::process::exit;
 
-fn main() -> std::io::Result<()> {
-    let mut archivo = OpenOptions::new().write(true).append(true).open("registro.pfs").unwrap();
-    if let Err(e) = writeln!(archivo, "A new line!") {
-        eprintln!("Couldn't write to file: {}", e);
+fn main() {
+    let mut registro = OpenOptions::new().create(true).write(true).append(true).open("registro.pfs").unwrap();
+    if let Err(e) = writeln!(registro, "¡Información!") {
+        eprintln!("No se pudo escribir en registro: {e}");
     }
     let mut opciones = Opciones {
         ayuda: false,
@@ -22,8 +22,6 @@ fn main() -> std::io::Result<()> {
     } else {
         abrir_servidor_http(opciones);
     }
-
-    Ok(())
 }
 
 fn tratar_argumentos(mut opciones: Opciones) -> Opciones {
