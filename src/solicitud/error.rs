@@ -1,5 +1,7 @@
-use std::{net::TcpStream, io::Write, fs};
 use crate::solicitud::dar_respuesta;
+use std::fs;
+use std::io::Write;
+use std::net::TcpStream;
 
 pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
     let respuesta = format!("HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n");

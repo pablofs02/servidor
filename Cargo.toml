@@ -1,12 +1,19 @@
 [package]
 name = "servidor"
-version = "0.1.0"
+version = "1.0.0"
+authors = ["Pablo Fernández Serrano <pablofs02@tutanota.com>"]
 edition = "2021"
+description = "Servidor http minimalista"
+readme = "./quehacer"
+repository = "https://github.com/pablofs02/servidor/"
+license = "GPL-3.0-or-later"
+keywords = ["servidor", "http", "minimalista", "rust", "libre"]
+categories = ["network-programming", "web-programming::http-server", "command-line-utilities"]
 
 [dependencies]
 if-addrs = "0.10.1"
-webbrowser = "0.8.9"
 urlencoding = "2.1.2"
+open = "4.1.0"
 
 [profile.release]
 opt-level = 'z'

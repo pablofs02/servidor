@@ -1,13 +1,13 @@
 extern crate if_addrs;
-extern crate webbrowser;
+extern crate open;
 mod hebras;
 mod opciones;
 mod registro;
 mod solicitud;
 use hebras::Piscina;
 pub use opciones::Opciones;
-use solicitud::tratar;
 use registro::Registro;
+use solicitud::tratar;
 use std::io::prelude::BufRead;
 use std::io::BufReader;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener, TcpStream};
@@ -39,17 +39,19 @@ fn sacar_dir(opciones: Opciones) -> SocketAddr {
 
 fn abrir_en_navegador(dir: &str) {
     let url = "http://".to_owned() + dir;
-    webbrowser::open(&url[..]).unwrap();
+    if open::that(&url[..]).is_err() {
+        eprintln!("No se pudo abrir en navegador");
+    }
 }
 
 fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
     let lector = BufReader::new(&mut conexion);
     if let Some(Ok(solicitud)) = lector.lines().next() {
-        solicitud(conexion, &solicitud, opciones);
+        tratar(conexion, &solicitud, opciones);
     }
 }
 
 fn dir_privada() -> IpAddr {
-    let direcciones = if_addrs::get_if_addrs().unwrap();
-    direcciones.get(1).unwrap().ip()
+    let direcciones = if_addrs::get_if_addrs().expect("Error al sacar direcciones ip");
+    direcciones.get(1).expect("Error al detectar la dirección privada").ip()
 }

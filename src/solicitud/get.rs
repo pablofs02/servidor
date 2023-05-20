@@ -1,5 +1,4 @@
-use super::dar_respuesta;
-use super::error;
+use super::{dar_respuesta, error};
 use std::fs;
 use std::net::TcpStream;
 
