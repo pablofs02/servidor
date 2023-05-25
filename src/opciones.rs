@@ -7,16 +7,17 @@ pub struct Opciones {
     pub puerto: u16
 }
 
-impl Opciones {
-    #[must_use]
-    pub const fn base() -> Self {
+impl Default for Opciones {
+    fn default() -> Self {
         Self {
             local: true,
             verboso: false,
             puerto: 9999
         }
     }
+}
 
+impl Opciones {
     pub fn configurar(&mut self, argumentos: &[String]) {
         for argumento in argumentos {
             if es_comando(argumentos, argumento) || argumento.is_empty() {

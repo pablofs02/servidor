@@ -2,12 +2,7 @@ use std::fs::{File, OpenOptions};
 use std::io::Write;
 
 pub struct Registro {
-    archivo: Archivo
-}
-
-enum Archivo {
-    Existe(File),
-    Ninguno
+    archivo: Option<File>
 }
 
 impl Registro {
@@ -16,15 +11,15 @@ impl Registro {
             |_| {
                 eprintln!("Error al abrir el registro");
                 println!("No se escribirá en registro");
-                Self { archivo: Archivo::Ninguno }
+                Self { archivo: None }
             },
-            |archivo| Self { archivo: Archivo::Existe(archivo) }
+            |archivo| Self { archivo: Some(archivo) }
         )
     }
 
     // Hacer que en vez de texto sea "[fecha - ip] texto" o similar
     pub fn escribir(&mut self, texto: &str) {
-        if let Archivo::Existe(archivo) = &mut self.archivo {
+        if let Some(archivo) = &mut self.archivo {
             if let Err(e) = writeln!(archivo, "{texto}") {
                 eprintln!("Error al escribir en el registro: {e}");
             }

@@ -9,11 +9,12 @@ repository = "https://github.com/pablofs02/servidor/"
 license = "GPL-3.0-or-later"
 keywords = ["servidor", "http", "minimalista", "rust", "libre"]
 categories = ["network-programming", "web-programming::http-server", "command-line-utilities"]
+publish = false
 
 [dependencies]
+open = "4.1.0"
 if-addrs = "0.10.1"
 urlencoding = "2.1.2"
-open = "4.1.0"
 
 [profile.release]
 opt-level = 'z'
