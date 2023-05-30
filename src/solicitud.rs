@@ -1,6 +1,6 @@
 mod error;
 mod get;
-use crate::opciones::Opciones;
+use super::Opciones;
 use std::fs::OpenOptions;
 use std::io::prelude::Write;
 use std::net::TcpStream;
@@ -102,4 +102,24 @@ fn sacar_extension(archivo: &str) -> String {
         }
     }
     tipo
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn buena_extension() {
+        let archivo = "datos.csv";
+        let esperado = "csv".to_string();
+        let obtenido = sacar_extension(archivo);
+        assert_eq!(esperado, obtenido);
+    }
+
+    #[test]
+    fn buen_tipo() {
+        let archivo = "funciones.js";
+        let esperado = "application/javascript".to_string();
+        let obtenido = sacar_tipo(archivo);
+        assert_eq!(esperado, obtenido);
+    }
 }

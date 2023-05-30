@@ -7,7 +7,6 @@ mod solicitud;
 use hebras::Piscina;
 pub use opciones::Opciones;
 use registro::Registro;
-use solicitud::tratar;
 use std::io::prelude::BufRead;
 use std::io::BufReader;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener, TcpStream};
@@ -47,7 +46,7 @@ fn abrir_en_navegador(dir: &str) {
 fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
     let lector = BufReader::new(&mut conexion);
     if let Some(Ok(solicitud)) = lector.lines().next() {
-        tratar(conexion, &solicitud, opciones);
+        solicitud::tratar(conexion, &solicitud, opciones);
     }
 }
 

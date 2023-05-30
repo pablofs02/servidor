@@ -5,7 +5,7 @@
 - Peticiones UTF-8
 - Colorear peticiones y respuestas
 - Registro
-- Abrir
+- Abrir archivo de configuración
 - Hacer pruebas de los métodos
 - Cambiar base por Default trait
 - Usar concat!()
