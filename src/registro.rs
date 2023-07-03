@@ -7,14 +7,21 @@ pub struct Registro {
 
 impl Registro {
     pub fn iniciar() -> Self {
-        OpenOptions::new().create(true).write(true).append(true).open("registro.pfs").map_or_else(
-            |_| {
-                eprintln!("Error al abrir el registro");
-                println!("No se escribirá en registro");
-                Self { archivo: None }
-            },
-            |archivo| Self { archivo: Some(archivo) }
-        )
+        OpenOptions::new()
+            .create(true)
+            .write(true)
+            .append(true)
+            .open("registro.ldf")
+            .map_or_else(
+                |_| {
+                    eprintln!("Error al abrir el registro");
+                    println!("No se escribirá en registro");
+                    Self { archivo: None }
+                },
+                |archivo| Self {
+                    archivo: Some(archivo)
+                }
+            )
     }
 
     // Hacer que en vez de texto sea "[fecha - ip] texto" o similar

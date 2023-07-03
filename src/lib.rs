@@ -9,21 +9,28 @@ pub use opciones::Opciones;
 use registro::Registro;
 use std::io::prelude::BufRead;
 use std::io::BufReader;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener, TcpStream};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener};
+use std::sync::{Arc, Mutex};
 
 pub fn iniciar_servidor_http(opciones: Opciones) {
     let dir: SocketAddr = sacar_dir(opciones);
     let entrada: TcpListener = TcpListener::bind(dir).expect("No se pudo iniciar el puerto");
-    let mut registro = Registro::iniciar();
-    registro.escribir("¡Servidor iniciado!");
+    let registro = Arc::new(Mutex::new(Registro::iniciar()));
+    registro.lock().unwrap().escribir("¡Servidor iniciado!");
     if opciones.local {
         abrir_en_navegador(dir.to_string().as_str());
     }
     let piscina = Piscina::new(16);
     for conexion in entrada.incoming() {
         let conexion = conexion.expect("Conexión incorrecta");
+        let registro = Arc::clone(&registro);
         piscina.arrancar(move || {
-            tratar_conexion(conexion, opciones);
+            let ip = conexion.peer_addr().unwrap().ip();
+            let lector = BufReader::new(&conexion);
+            if let Some(Ok(solicitud)) = lector.lines().next() {
+                registro.lock().unwrap().escribir(&format!("[{ip}] {solicitud}"));
+                solicitud::tratar(conexion, &solicitud, opciones);
+            }
         });
     }
 }
@@ -43,14 +50,10 @@ fn abrir_en_navegador(dir: &str) {
     }
 }
 
-fn tratar_conexion(mut conexion: TcpStream, opciones: Opciones) {
-    let lector = BufReader::new(&mut conexion);
-    if let Some(Ok(solicitud)) = lector.lines().next() {
-        solicitud::tratar(conexion, &solicitud, opciones);
-    }
-}
-
 fn dir_privada() -> IpAddr {
     let direcciones = if_addrs::get_if_addrs().expect("Error al sacar direcciones ip");
-    direcciones.get(1).expect("Error al detectar la dirección privada").ip()
+    direcciones
+        .get(1)
+        .expect("Error al detectar la dirección privada")
+        .ip()
 }

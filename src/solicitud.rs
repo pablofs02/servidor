@@ -1,7 +1,6 @@
 mod error;
 mod get;
 use super::Opciones;
-use std::fs::OpenOptions;
 use std::io::prelude::Write;
 use std::net::TcpStream;
 use urlencoding::decode;
@@ -10,12 +9,10 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     let (tipo, archivo, mut estatus) = desmontar_solicitud(solicitud);
     let archivo = decode(&archivo).expect("UTF-8");
     if opciones.verboso {
-        conexion.peer_addr().map_or_else(|_| println!("{tipo} {archivo} {estatus}"), |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip()));
-    }
-    let ip = conexion.peer_addr().unwrap().ip();
-    let mut registro = OpenOptions::new().write(true).append(true).open("registro.pfs").unwrap();
-    if let Err(e) = writeln!(registro, "[{ip}] {tipo} {archivo} {estatus}") {
-        eprintln!("Error al registrar: {e}");
+        conexion.peer_addr().map_or_else(
+            |_| println!("{tipo} {archivo} {estatus}"),
+            |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip())
+        );
     }
     estatus.push_str(" 200 OK");
     match &tipo[..] {
@@ -33,7 +30,8 @@ fn solicitud_desconocida(mut conexion: TcpStream) {
 fn dar_respuesta(mut conexion: TcpStream, estatus: &str, archivo: &str, contenido: &[u8]) {
     let longitud = contenido.len();
     let tipo = sacar_tipo(archivo).to_string();
-    let respuesta = format!("{estatus}\r\nContent-Type: {tipo}\r\nContent-Length: {longitud}\r\n\r\n");
+    let respuesta =
+        format!("{estatus}\r\nContent-Type: {tipo}\r\nContent-Length: {longitud}\r\n\r\n");
     conexion.write_all(respuesta.as_bytes()).unwrap();
     conexion.write_all(contenido).unwrap();
     conexion.flush().unwrap();

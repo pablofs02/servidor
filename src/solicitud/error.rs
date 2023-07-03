@@ -4,13 +4,18 @@ use std::io::Write;
 use std::net::TcpStream;
 
 pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
-    let respuesta = format!("HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n");
+    let respuesta = format!(
+        "HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n"
+    );
     conexion.write_all(respuesta.as_bytes()).unwrap();
     conexion.flush().unwrap();
 }
 
 pub fn no_encontrado_404(conexion: TcpStream, archivo: &str) {
-    conexion.peer_addr().map_or_else(|_| println!("\x1b[31m{archivo}\x1b[0m"), |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip()));
+    conexion.peer_addr().map_or_else(
+        |_| println!("\x1b[31m{archivo}\x1b[0m"),
+        |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip())
+    );
     let archivo = String::from("404.html");
     let estatus = "HTTP/1.1 404 Not Found".to_string();
     match fs::read(&archivo) {

@@ -53,7 +53,10 @@ impl Opciones {
 }
 
 fn es_comando(argumentos: &[String], argumento: &String) -> bool {
-    argumento == argumentos.get(0).expect("No está el comando en los argumentos")
+    argumento
+        == argumentos
+            .get(0)
+            .expect("No está el comando en los argumentos")
 }
 
 fn mensaje_de_ayuda() {

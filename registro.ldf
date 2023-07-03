@@ -1,0 +1,100 @@
+¡Servidor iniciado!
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET /favicon.ico HTTP/1.1
+¡Servidor iniciado!
+[176.80.117.105] GET / HTTP/1.1
+[176.80.117.105] GET /web/ HTTP/1.1
+[[176176..8080..117117..105105] ] GETGET  /web/func.js/web/estilo.css  HTTP/1.1HTTP/1.1
+
+[176.80.117.105] GET /web/img.jpg HTTP/1.1
+[176.80.117.105] GET /web/españa.svg HTTP/1.1
+¡Servidor iniciado!
+[176.80.117.105] GET /web/ HTTP/1.1
+[[176176..8080..117117..105105] ] GETGET  /web/func.js/web/estilo.css  HTTP/1.1HTTP/1.1
+
+[176.80.117.105] GET /web/img.jpg HTTP/1.1
+[176.80.117.105] GET /web/españa.svg HTTP/1.1
+[192.168.0.17] GET / HTTP/1.1
+[192.168.0.17] GET /favicon.ico HTTP/1.1
+[192.168.0.17] GET /web/ HTTP/1.1
+[192.168.0.17] GET /web/estilo.css HTTP/1.1
+[192.168.0.17] GET /web/func.js HTTP/1.1
+[192.168.0.17] GET /web/img.jpg HTTP/1.1
+[192.168.0.17] GET /web/video.mp4 HTTP/1.1
+[192.168.0.17] GET /web/españa.svg HTTP/1.1
+[47.88.90.156] GET / HTTP/1.1
+[47.251.11.3] GET /Public/home/js/check.js HTTP/1.1
+[47.88.90.156] GET /static/admin/javascript/hetong.js HTTP/1.1
+
+[[176176..8080..117117..105105] ] GETGET  /web/func.js/web/estilo.css  HTTP/1.1HTTP/1.1
+
+[176.80.117.105] GET /web/func.js HTTP/1.1
+[176.80.117.105] GET /web/estilo.css HTTP/1.1
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET /favicon.ico HTTP/1.1
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET /favicon.ico HTTP/1.1
+[127.0.0.1] GET /web/ HTTP/1.1
+[127.0.0.1] GET /web/estilo.css HTTP/1.1
+[127.0.0.1] GET /web/func.js HTTP/1.1
+[127.0.0.1] GET /web/img.jpg HTTP/1.1
+[127.0.0.1] GET /web/video.mp4 HTTP/1.1
+[127.0.0.1] GET /web/españa.svg HTTP/1.1
+¡Servidor iniciado!
+¡Servidor iniciado!
+¡Servidor iniciado!
+[95.127.50.186] GET / HTTP/1.1
+[95.127.50.186] GET / HTTP/1.1
+[95.127.50.186] GET /web/ HTTP/1.1
+[95.127.50.186] GET /web/estilo.css HTTP/1.1
+[95.127.50.186] GET /web/func.js HTTP/1.1
+[95.127.50.186] GET /web/img.jpg HTTP/1.1
+[95.127.50.186] GET /web/españa.svg HTTP/1.1
+[95.127.50.186] GET /web/ HTTP/1.1
+[[9595..127127..5050..186186] ] GETGET  /web/estilo.css/web/func.js  HTTP/1.1HTTP/1.1
+
+[95.127.50.186] GET /web/img.jpg HTTP/1.1
+[95.127.50.186] GET /web/españa.svg HTTP/1.1
+[95.127.50.186] GET /web/ HTTP/1.1
+[[9595..127127..5050..186186] ] GETGET  /web/func.js/web/estilo.css  HTTP/1.1HTTP/1.1
+
+[95.127.50.186] GET /web/img.jpg HTTP/1.1
+[95.127.50.186] GET /web/españa.svg HTTP/1.1
+[95.127.50.186] GET /web/ HTTP/1.1
+[95.127.50.186] GET /web/func.js HTTP/1.1
+[95.127.50.186] GET /web/estilo.css HTTP/1.1
+[95.127.50.186] GET /web/img.jpg HTTP/1.1
+[95.127.50.186] GET /web/españa.svg HTTP/1.1
+[95.127.50.186] GET /web/video.mp4 HTTP/1.1
+[95.127.50.186] GET /web/ HTTP/1.1
+[[9595..127127..5050..186186] ] GETGET  /web/estilo.css/web/func.js  HTTP/1.1HTTP/1.1
+
+[95.127.50.186] GET /web/img.jpg HTTP/1.1
+[95.127.50.186] GET /web/españa.svg HTTP/1.1
+[95.127.50.186] GET /web/ HTTP/1.1
+[95.127.50.186] GET /web/estilo.css HTTP/1.1
+[95.127.50.186] GET /web/func.js HTTP/1.1
+[95.127.50.186] GET /web/img.jpg HTTP/1.1
+[95.127.50.186] GET /web/españa.svg HTTP/1.1
+¡Servidor iniciado!
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET /favicon.ico HTTP/1.1
+[127.0.0.1] GET /web/ HTTP/1.1
+[127.0.0.1] GET /web/estilo.css HTTP/1.1
+[127.0.0.1] GET /web/func.js HTTP/1.1
+[127.0.0.1] GET /web/img.jpg HTTP/1.1
+[127.0.0.1] GET /web/video.mp4 HTTP/1.1
+[127.0.0.1] GET /web/espa%C3%B1a.svg HTTP/1.1
+[127.0.0.1] GET /web/ HTTP/1.1
+[127.0.0.1] GET /web/estilo.css HTTP/1.1
+[127.0.0.1] GET /web/func.js HTTP/1.1
+[127.0.0.1] GET /web/img.jpg HTTP/1.1
+¡Servidor iniciado!
+[127.0.0.1] GET / HTTP/1.1
+[127.0.0.1] GET /web/ HTTP/1.1
+[127.0.0.1] GET /web/estilo.css HTTP/1.1
+[127.0.0.1] GET /web/func.js HTTP/1.1
+[127.0.0.1] GET /web/img.jpg HTTP/1.1
+[127.0.0.1] GET /web/video.mp4 HTTP/1.1

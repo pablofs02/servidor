@@ -38,7 +38,10 @@ impl Piscina {
         for _ in 0..capacidad {
             hebras.push(Hebra::new(Arc::clone(&receptor)));
         }
-        Self { hebras, instructor: Some(emisor) }
+        Self {
+            hebras,
+            instructor: Some(emisor)
+        }
     }
 
     pub fn arrancar<F>(&self, f: F)
