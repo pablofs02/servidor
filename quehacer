@@ -1,11 +1,7 @@
 - Permitir argumentos de tipo: 'c=valor' o 'c valor'
-* Opción de cambiar directorio base (d)
-* Opción de cambiar el puerto (p)
-- Mirar si una petición externa da mal resultado ../
-- Peticiones UTF-8
++ Opción de cambiar directorio base (d)
++ Opción de cambiar el puerto (p)
 - Colorear peticiones y respuestas
-- Registro
 - Abrir archivo de configuración
 - Hacer pruebas de los métodos
 - Cambiar base por Default trait
-- Usar concat!()
