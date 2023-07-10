@@ -28,7 +28,10 @@ pub fn iniciar_servidor_http(opciones: Opciones) {
             let ip = conexion.peer_addr().unwrap().ip();
             let lector = BufReader::new(&conexion);
             if let Some(Ok(solicitud)) = lector.lines().next() {
-                registro.lock().unwrap().escribir(&format!("[{ip}] {solicitud}"));
+                registro
+                    .lock()
+                    .unwrap()
+                    .escribir(&format!("[{ip}] {solicitud}"));
                 solicitud::tratar(conexion, &solicitud, opciones);
             }
         });

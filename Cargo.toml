@@ -1,10 +1,10 @@
 [package]
-name = "servidor"
+name = "servus"
 version = "1.0.0"
 authors = ["Pablo Fernández Serrano <pablofs02@tutanota.com>"]
 edition = "2021"
 description = "Servidor http minimalista"
-readme = "./quehacer"
+readme = "DOCTRINA"
 repository = "https://github.com/pablofs02/servidor/"
 license = "GPL-3.0-or-later"
 keywords = ["servidor", "http", "minimalista", "rust", "libre"]

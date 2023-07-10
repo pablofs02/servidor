@@ -2,7 +2,7 @@ use std::fs::{File, OpenOptions};
 use std::io::Write;
 
 pub struct Registro {
-    archivo: Option<File>
+    archivo: Option<File>,
 }
 
 impl Registro {
@@ -15,12 +15,12 @@ impl Registro {
             .map_or_else(
                 |_| {
                     eprintln!("Error al abrir el registro");
-                    println!("No se escribirá en registro");
+                    eprintln!("No se escribirá en registro");
                     Self { archivo: None }
                 },
                 |archivo| Self {
-                    archivo: Some(archivo)
-                }
+                    archivo: Some(archivo),
+                },
             )
     }
 

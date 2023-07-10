@@ -4,7 +4,7 @@ use std::thread;
 type Orden = Box<dyn FnOnce() + Send + 'static>;
 
 struct Hebra {
-    hilo: Option<thread::JoinHandle<()>>
+    hilo: Option<thread::JoinHandle<()>>,
 }
 
 impl Hebra {
@@ -26,7 +26,7 @@ impl Hebra {
 
 pub struct Piscina {
     hebras: Vec<Hebra>,
-    instructor: Option<mpsc::Sender<Orden>>
+    instructor: Option<mpsc::Sender<Orden>>,
 }
 
 impl Piscina {
@@ -40,12 +40,14 @@ impl Piscina {
         }
         Self {
             hebras,
-            instructor: Some(emisor)
+            instructor: Some(emisor),
         }
     }
 
     pub fn arrancar<F>(&self, f: F)
-    where F: FnOnce() + Send + 'static {
+    where
+        F: FnOnce() + Send + 'static,
+    {
         let orden = Box::new(f);
         self.instructor.as_ref().unwrap().send(orden).unwrap();
     }

@@ -14,13 +14,13 @@ pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
 pub fn no_encontrado_404(conexion: TcpStream, archivo: &str) {
     conexion.peer_addr().map_or_else(
         |_| println!("\x1b[31m{archivo}\x1b[0m"),
-        |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip())
+        |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip()),
     );
     let archivo = String::from("404.html");
     let estatus = "HTTP/1.1 404 Not Found".to_string();
     match fs::read(&archivo) {
         Ok(contenido) => dar_respuesta(conexion, &estatus, &archivo, &contenido),
-        Err(_) => dar_respuesta(conexion, &estatus, &archivo, e404().as_bytes())
+        Err(_) => dar_respuesta(conexion, &estatus, &archivo, e404().as_bytes()),
     }
 }
 
