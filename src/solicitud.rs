@@ -8,7 +8,7 @@ use urlencoding::decode;
 
 pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     let (tipo, archivo, mut estatus) = desmontar_solicitud(solicitud);
-    let archivo = decode(&archivo).expect("UTF-8");
+    let archivo = decodificar_archivo(&archivo);
     if opciones.verboso {
         conexion.peer_addr().map_or_else(
             |_| println!("{tipo} {archivo} {estatus}"),
@@ -17,9 +17,29 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     }
     estatus.push_str(" 200 OK");
     match &tipo[..] {
-        "GET" => get::solicitar(conexion, archivo.to_string(), &estatus),
+        "GET" => get::solicitar(conexion, archivo, &estatus),
         _ => solicitud_desconocida(conexion),
     }
+}
+
+fn decodificar_archivo(archivo: &str) -> String {
+    let archivo = decode(archivo).unwrap();
+    let mut arc = vec![];
+    let mut nivel = 0;
+    for dir in archivo.split('/') {
+        if dir == ".." {
+            nivel -= 1;
+            arc.pop();
+        } else if dir == "." {
+        } else {
+            nivel += 1;
+            arc.push(dir);
+        }
+        if nivel < 0 {
+            arc = vec![];
+        }
+    }
+    arc.join("/")
 }
 
 fn solicitud_desconocida(mut conexion: TcpStream) {

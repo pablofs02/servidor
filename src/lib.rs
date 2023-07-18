@@ -1,9 +1,11 @@
 extern crate if_addrs;
 extern crate open;
+
 mod hebras;
 mod opciones;
 mod registro;
 mod solicitud;
+
 use hebras::Piscina;
 pub use opciones::Opciones;
 use registro::Registro;
@@ -16,22 +18,15 @@ pub fn iniciar_servidor_http(opciones: Opciones) {
     let dir: SocketAddr = sacar_dir(opciones);
     let entrada: TcpListener = TcpListener::bind(dir).expect("No se pudo iniciar el puerto");
     let registro = Arc::new(Mutex::new(Registro::iniciar()));
-    registro.lock().unwrap().escribir("¡Servidor iniciado!");
-    if opciones.local {
-        abrir_en_navegador(dir.to_string().as_str());
-    }
+    registro.lock().unwrap().notificar();
     let piscina = Piscina::new(16);
-    for conexion in entrada.incoming() {
-        let conexion = conexion.expect("Conexión incorrecta");
+    for conexion in entrada.incoming().flatten() {
         let registro = Arc::clone(&registro);
         piscina.arrancar(move || {
             let ip = conexion.peer_addr().unwrap().ip();
             let lector = BufReader::new(&conexion);
             if let Some(Ok(solicitud)) = lector.lines().next() {
-                registro
-                    .lock()
-                    .unwrap()
-                    .escribir(&format!("[{ip}] {solicitud}"));
+                registro.lock().unwrap().solicitud(&ip, &solicitud);
                 solicitud::tratar(conexion, &solicitud, opciones);
             }
         });
@@ -43,13 +38,6 @@ fn sacar_dir(opciones: Opciones) -> SocketAddr {
         SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), opciones.puerto)
     } else {
         SocketAddr::new(dir_privada(), opciones.puerto)
-    }
-}
-
-fn abrir_en_navegador(dir: &str) {
-    let url = "http://".to_owned() + dir;
-    if open::that(&url[..]).is_err() {
-        eprintln!("No se pudo abrir en navegador");
     }
 }
 

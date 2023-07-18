@@ -1,4 +1,4 @@
-use servidor::{iniciar_servidor_http, Opciones};
+use servus::{iniciar_servidor_http, Opciones};
 use std::env::args;
 
 fn main() {
