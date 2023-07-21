@@ -51,8 +51,8 @@ impl Opciones {
 fn mensaje_de_ayuda() {
     println!(
         "Modo de empleo: servidor [OPCIONES...]
-    l    servidor local
-    g    servidor global
-    v    más información"
+    l    abrir en local
+    g    abrir en global
+    v    mostrar peticiones"
     );
 }

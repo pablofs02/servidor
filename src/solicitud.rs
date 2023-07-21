@@ -1,8 +1,11 @@
 mod error;
 mod get;
+mod head;
 mod tipo;
-use super::Opciones;
+
+use crate::Opciones;
 use std::io::prelude::Write;
+use std::io::stdout;
 use std::net::TcpStream;
 use urlencoding::decode;
 
@@ -18,6 +21,7 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     estatus.push_str(" 200 OK");
     match &tipo[..] {
         "GET" => get::solicitar(conexion, archivo, &estatus),
+        "HEAD" => head::solicitar(conexion, archivo, &estatus),
         _ => solicitud_desconocida(conexion),
     }
 }
@@ -53,7 +57,10 @@ fn dar_respuesta(mut conexion: TcpStream, estatus: &str, archivo: &str, contenid
     let tipo = tipo::sacar(archivo).to_string();
     let respuesta =
         format!("{estatus}\r\nContent-Type: {tipo}\r\nContent-Length: {longitud}\r\n\r\n");
+    println!("{respuesta}");
+    stdout().flush().unwrap();
     conexion.write_all(respuesta.as_bytes()).unwrap();
+    // En esta línea pasa algo cuando intento acceder a un archivo que no existe.
     conexion.write_all(contenido).unwrap();
     conexion.flush().unwrap();
 }

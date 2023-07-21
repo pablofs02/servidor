@@ -32,7 +32,7 @@ impl Registro {
 
     pub fn solicitud(&mut self, ip: &IpAddr, solicitud: &str) {
         let tempus = current_tempus();
-        let texto = format!("|{tempus}|{ip}| {solicitud}");
+        let texto = format!("|{tempus}|{ip}|{solicitud}|");
         self.escribir(&texto);
     }
 
