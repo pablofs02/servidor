@@ -10,7 +10,7 @@ use std::net::TcpStream;
 use urlencoding::decode;
 
 pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
-    let (tipo, archivo, mut estatus) = desmontar_solicitud(solicitud);
+    let (tipo, archivo, estatus) = desmontar_solicitud(solicitud);
     let archivo = decodificar_archivo(&archivo);
     if opciones.verboso {
         conexion.peer_addr().map_or_else(
@@ -18,7 +18,8 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
             |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip()),
         );
     }
-    estatus.push_str(" 200 OK");
+    stdout().flush().unwrap();
+    let estatus = "HTTP/1.1 200 OK".to_owned();
     match &tipo[..] {
         "GET" => get::solicitar(conexion, archivo, &estatus),
         "HEAD" => head::solicitar(conexion, archivo, &estatus),
@@ -47,7 +48,7 @@ fn decodificar_archivo(archivo: &str) -> String {
 }
 
 fn solicitud_desconocida(mut conexion: TcpStream) {
-    let respuesta = "HTTP/1.1 501 Not Implemented";
+    let respuesta = "HTTP/1.1 501 Not Implemented\r\n";
     conexion.write_all(respuesta.as_bytes()).unwrap();
     conexion.flush().unwrap();
 }
@@ -57,10 +58,9 @@ fn dar_respuesta(mut conexion: TcpStream, estatus: &str, archivo: &str, contenid
     let tipo = tipo::sacar(archivo).to_string();
     let respuesta =
         format!("{estatus}\r\nContent-Type: {tipo}\r\nContent-Length: {longitud}\r\n\r\n");
-    println!("{respuesta}");
-    stdout().flush().unwrap();
     conexion.write_all(respuesta.as_bytes()).unwrap();
     // En esta línea pasa algo cuando intento acceder a un archivo que no existe.
+    // Se produce cuando la petición no acaba en \n o \r\n.
     conexion.write_all(contenido).unwrap();
     conexion.flush().unwrap();
 }

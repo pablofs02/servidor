@@ -1,6 +1,5 @@
 use super::{dar_respuesta, error};
 use std::fs;
-use std::io::{stdout, Write};
 use std::net::TcpStream;
 
 pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str) {
@@ -23,11 +22,7 @@ pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str) {
         error::movido_301(conexion, &archivo);
     } else {
         match fs::read(&archivo[1..]) {
-            Ok(contenido) => {
-                println!("{contenido:?}");
-                stdout().flush().unwrap();
-                dar_respuesta(conexion, estatus, &archivo, &contenido)
-            }
+            Ok(contenido) => dar_respuesta(conexion, estatus, &archivo, &contenido),
             Err(_) => error::no_encontrado_404(conexion, &archivo),
         }
     }
