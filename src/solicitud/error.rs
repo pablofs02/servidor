@@ -1,14 +1,16 @@
 use crate::solicitud::dar_respuesta;
+use crate::Opciones;
 use std::fs;
 use std::io::Write;
 use std::net::TcpStream;
 
 enum ErrorHTTP {
-    MovidoPermanente,   // 301
-    MalaSolicitud,      // 400
-    NoEncontrado,       // 404
-    NoImplementado,     // 501
-    VersionNoSoportada, // 505
+    MovidoPermanente,      // 301
+    MalaSolicitud,         // 400
+    NoEncontrado,          // 404
+    ContenidoImprocesable, // 422
+    NoImplementado,        // 501
+    VersionNoSoportada,    // 505
 }
 
 pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
@@ -19,11 +21,13 @@ pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
     conexion.flush().unwrap();
 }
 
-pub fn no_encontrado_404(conexion: TcpStream, archivo: &str) {
-    conexion.peer_addr().map_or_else(
-        |_| println!("\x1b[31m{archivo}\x1b[0m"),
-        |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip()),
-    );
+pub fn no_encontrado_404(conexion: TcpStream, archivo: &str, opciones: Opciones) {
+    if opciones.errores {
+        conexion.peer_addr().map_or_else(
+            |_| println!("\x1b[31m{archivo}\x1b[0m"),
+            |dir| println!("[{}] \x1b[31m{archivo}\x1b[0m", dir.ip()),
+        );
+    }
     let archivo = String::from("404.html");
     let estatus = "HTTP/1.1 404 Not Found".to_string();
     match fs::read(&archivo) {

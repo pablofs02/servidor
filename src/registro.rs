@@ -3,6 +3,8 @@ use std::io::Write;
 use std::net::IpAddr;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+static REGISTRO: &str = "registro";
+
 pub struct Registro {
     archivo: Option<File>,
 }
@@ -10,24 +12,15 @@ pub struct Registro {
 impl Registro {
     pub fn iniciar() -> Self {
         OpenOptions::new()
-            .create(true)
             .write(true)
             .append(true)
-            .open("registro.ldf")
+            .open(REGISTRO)
             .map_or_else(
-                |_| {
-                    eprintln!("Error al abrir el registro");
-                    eprintln!("No se escribirá en registro");
-                    Self { archivo: None }
-                },
+                |_| Self { archivo: None },
                 |archivo| Self {
                     archivo: Some(archivo),
                 },
             )
-    }
-
-    pub fn notificar(&mut self) {
-        self.escribir("¡Servus iniciado!");
     }
 
     pub fn solicitud(&mut self, ip: &IpAddr, solicitud: &str) {
@@ -36,11 +29,26 @@ impl Registro {
         self.escribir(&texto);
     }
 
-    pub fn escribir(&mut self, texto: &str) {
+    fn escribir(&mut self, texto: &str) {
         if let Some(archivo) = &mut self.archivo {
             if let Err(e) = writeln!(archivo, "{texto}") {
                 eprintln!("Error al escribir en el registro: {e}");
             }
+        } else {
+            OpenOptions::new()
+                .create(true)
+                .write(true)
+                .append(true)
+                .open(REGISTRO)
+                .map_or_else(
+                    |_| (),
+                    |mut archivo| {
+                        if let Err(e) = writeln!(archivo, "{texto}") {
+                            eprintln!("Error al escribir en el registro: {e}");
+                        }
+                        self.archivo = Some(archivo);
+                    },
+                )
         }
     }
 }

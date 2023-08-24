@@ -21,8 +21,8 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     stdout().flush().unwrap();
     let estatus = "HTTP/1.1 200 OK".to_owned();
     match &tipo[..] {
-        "GET" => get::solicitar(conexion, archivo, &estatus),
-        "HEAD" => head::solicitar(conexion, archivo, &estatus),
+        "GET" => get::solicitar(conexion, archivo, &estatus, opciones),
+        "HEAD" => head::solicitar(conexion, archivo, &estatus, opciones),
         _ => solicitud_desconocida(conexion),
     }
 }

@@ -1,8 +1,10 @@
+use crate::Opciones;
+
 use super::{dar_respuesta, error};
 use std::fs;
 use std::net::TcpStream;
 
-pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str) {
+pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str, opciones: Opciones) {
     // comprobar si las rutas comienzan por '/'.
     let mut error301 = false;
     if archivo == "/" {
@@ -24,7 +26,7 @@ pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str) {
     } else {
         match fs::read(&archivo[1..]) {
             Ok(contenido) => dar_respuesta(conexion, estatus, &archivo, &contenido),
-            Err(_) => error::no_encontrado_404(conexion, &archivo),
+            Err(_) => error::no_encontrado_404(conexion, &archivo, opciones),
         }
     }
 }
