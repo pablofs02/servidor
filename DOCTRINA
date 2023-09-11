@@ -1,9 +1,6 @@
-# Quehaceres
-- Permitir la ausencia de la versión.
-- Permitir argumentos de tipo: 'c=valor' o 'c valor'
-- Opción de cambiar directorio base (d)
-- Opción de cambiar el puerto (p)
-- Colorear peticiones y respuestas
-- Abrir archivo de configuración
-- Hacer pruebas de los métodos
-- Cambiar read_line de servus a read(buffer).
+0 Quehaceres
+- Opción de cambiar el puerto (p).
+- Colorear peticiones y respuestas.
+- Tener y abrir archivo de configuración.
+- Hacer pruebas de los métodos.
+- Cambiar read_line de servus a read(buffer) para el contenido.

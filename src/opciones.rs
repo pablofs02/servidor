@@ -75,7 +75,7 @@ fn dir_privada() -> IpAddr {
 
 fn mensaje_de_ayuda() {
     println!(
-        "Modo de empleo: servidor [OPCIONES...]
+        "Modo de empleo: servidor <OPCIONES>
     l    abrir en local
     g    abrir en global
     r    registrar peticiones
