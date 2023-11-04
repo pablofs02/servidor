@@ -11,7 +11,7 @@ use urlencoding::decode;
 
 pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     let (tipo, archivo, estatus) = desmontar_solicitud(solicitud);
-    let archivo = decodificar_archivo(&archivo);
+    let archivo = decodificar_ruta(&archivo);
     if opciones.verboso {
         conexion.peer_addr().map_or_else(
             |_| println!("{tipo} {archivo} {estatus}"),
@@ -27,7 +27,7 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
     }
 }
 
-fn decodificar_archivo(archivo: &str) -> String {
+fn decodificar_ruta(archivo: &str) -> String {
     let archivo = decode(archivo).unwrap();
     let mut arc = vec![];
     let mut nivel = 0;
