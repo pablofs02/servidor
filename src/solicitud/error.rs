@@ -17,8 +17,12 @@ pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
     let respuesta = format!(
         "HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n"
     );
-    conexion.write_all(respuesta.as_bytes()).unwrap();
-    conexion.flush().unwrap();
+    if conexion.write_all(respuesta.as_bytes()).is_err() {
+        println!("wirteallerror")
+    };
+    if conexion.flush().is_err() {
+        println!("caouhbfpiawb")
+    }
 }
 
 pub fn no_encontrado_404(conexion: TcpStream, archivo: &str, opciones: Opciones) {

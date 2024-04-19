@@ -21,7 +21,7 @@ pub fn iniciar_servidor_http(opciones: Opciones) {
     let registro = Arc::new(Mutex::new(Registro::iniciar()));
     for conexion in entrada.incoming().flatten() {
         let registro = Arc::clone(&registro);
-        piscina.arrancar(move || {
+        piscina.ejecutar(move || {
             let ip = conexion.peer_addr().unwrap().ip();
             let lector = BufReader::new(&conexion);
             if let Some(Ok(solicitud)) = lector.lines().next() {

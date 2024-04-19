@@ -28,7 +28,11 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
 }
 
 fn decodificar_ruta(archivo: &str) -> String {
-    let archivo = decode(archivo).unwrap();
+    let archivo = if let Ok(a) = decode(archivo) {
+        a.to_string()
+    } else {
+        "hola".to_string()
+    };
     let mut arc = vec![];
     let mut nivel = 0;
     for dir in archivo.split('/') {
@@ -49,7 +53,9 @@ fn decodificar_ruta(archivo: &str) -> String {
 
 fn solicitud_desconocida(mut conexion: TcpStream) {
     let respuesta = "HTTP/1.1 501 Not Implemented\r\n";
-    conexion.write_all(respuesta.as_bytes()).unwrap();
+    if conexion.write_all(respuesta.as_bytes()).is_err() {
+        std::fs::File::create("writeall").unwrap();
+    };
     conexion.flush().unwrap();
 }
 
@@ -58,10 +64,12 @@ fn dar_respuesta(mut conexion: TcpStream, estatus: &str, archivo: &str, contenid
     let tipo = tipo::sacar(archivo).to_string();
     let respuesta =
         format!("{estatus}\r\nContent-Type: {tipo}\r\nContent-Length: {longitud}\r\n\r\n");
-    conexion.write_all(respuesta.as_bytes()).unwrap();
+    if conexion.write_all(respuesta.as_bytes()).is_err() {
+        std::fs::File::create("deabajo").unwrap();
+    }
     // En esta línea pasa algo cuando intento acceder a un archivo que no existe.
     // Se produce cuando la petición no acaba en \n o \r\n.
-    conexion.write_all(contenido).unwrap();
+    if conexion.write_all(contenido).is_err() {}
     conexion.flush().unwrap();
 }
 

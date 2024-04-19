@@ -16,7 +16,8 @@ impl Hebra {
                     hilo();
                 }
                 Err(_) => {
-                    break;
+                    // si rompe ya no recibe???
+                    // break;
                 }
             }
         });
@@ -44,12 +45,17 @@ impl Piscina {
         }
     }
 
-    pub fn arrancar<F>(&self, f: F)
+    pub fn ejecutar<F>(&self, orden: F)
     where
         F: FnOnce() + Send + 'static,
     {
-        let orden = Box::new(f);
-        self.instructor.as_ref().unwrap().send(orden).unwrap();
+        self.instructor
+            .as_ref()
+            .unwrap()
+            .send(Box::new(orden))
+            .unwrap_or_else(|_| {
+                // aquí es donde crashea cuando se lanza desde vim
+            });
     }
 }
 
