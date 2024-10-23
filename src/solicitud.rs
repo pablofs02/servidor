@@ -1,5 +1,6 @@
 mod error;
 mod get;
+mod options;
 mod head;
 mod tipo;
 
@@ -17,12 +18,19 @@ pub fn tratar(conexion: TcpStream, solicitud: &str, opciones: Opciones) {
             |_| println!("{tipo} {archivo} {estatus}"),
             |dir| println!("[{}] {tipo} {archivo} {estatus}", dir.ip()),
         );
+        stdout().flush().unwrap();
     }
-    stdout().flush().unwrap();
     let estatus = "HTTP/1.1 200 OK".to_owned();
     match &tipo[..] {
         "GET" => get::solicitar(conexion, archivo, &estatus, opciones),
         "HEAD" => head::solicitar(conexion, archivo, &estatus, opciones),
+        // "POST" => (),
+        // "PUT" => (),
+        // "DELETE" => (),
+        // "CONNECT" => (),
+        "OPTIONS" => options::solicitar(conexion),
+        // "TRACE" => (),
+        // "PATCH" => (),
         _ => solicitud_desconocida(conexion),
     }
 }

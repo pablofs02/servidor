@@ -15,10 +15,13 @@ enum ErrorHTTP {
 
 pub fn movido_301(mut conexion: TcpStream, ruta: &str) {
     let respuesta = format!(
-        "HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html\r\nLocation: {ruta}\r\n\r\n"
+        "HTTP/1.1 301 Moved Permanently\r\n\
+        Content-Type: text/html\r\n\
+        Location: {ruta}\r\n
+        \r\n",
     );
     if conexion.write_all(respuesta.as_bytes()).is_err() {
-        println!("wirteallerror")
+        println!("writeallerror")
     };
     if conexion.flush().is_err() {
         println!("caouhbfpiawb")

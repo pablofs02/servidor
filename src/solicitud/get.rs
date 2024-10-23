@@ -1,15 +1,14 @@
-use crate::Opciones;
-
 use super::{dar_respuesta, error};
+use crate::Opciones;
 use std::fs;
 use std::net::TcpStream;
 
-pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str, opciones: Opciones) {
+pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str, opciones: Opciones) -> Result<(), usize> {
     let mut error301 = false;
     if archivo == "/" {
         archivo.push_str("index.html");
     } else {
-        fs::metadata(&archivo[1..]).ok().map_or((), |metadata| {
+        let _ = fs::metadata(&archivo[1..]).ok().map_or((), |metadata| {
             if metadata.is_dir() {
                 if archivo.ends_with('/') {
                     archivo.push_str("/index.html");
@@ -28,4 +27,5 @@ pub fn solicitar(conexion: TcpStream, mut archivo: String, estatus: &str, opcion
             Err(_) => error::no_encontrado_404(conexion, &archivo, opciones),
         }
     }
+    Ok(())
 }
